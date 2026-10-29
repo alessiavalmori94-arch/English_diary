@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en" translate="no">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#efefec" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="English Diary" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="icon" href="icon-192.png" type="image/png" />
+  <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+  <title>English Diary</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700;800&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="nav">
+    <div class="nav-inner">
+      <div class="nav-left">
+        <a class="brand" href="#">
+          <span class="brand-dot"></span>
+          <span class="brand-name">English Diary</span>
+        </a>
+        <div class="diary-switch" id="diary-switch" hidden></div>
+      </div>
+
+      <nav class="tabs" role="tablist">
+        <button class="tab active" data-view="diary" role="tab">Diary</button>
+        <button class="tab" data-view="sentences" role="tab">Sentences</button>
+        <button class="tab" data-view="review" role="tab">
+          <span id="review-tab-label">Review</span> <span class="tab-dot" id="review-dot" hidden></span>
+        </button>
+        <button class="tab" id="rules-tab" data-view="rules" role="tab" hidden>Rules</button>
+      </nav>
+
+      <div class="nav-meta">
+        <span class="sync-status" id="sync-status" hidden></span>
+        <span class="nav-count" id="total-number">0</span>
+        <span class="nav-count-label">words learned</span>
+        <button class="nav-logout" id="logout-btn" hidden>Sign out</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="page">
+    <section class="hero">
+      <div class="eyebrow">
+        <span id="hero-eyebrow"></span>
+        <span class="chip" id="hero-date"></span>
+        <span id="hero-score"></span>
+      </div>
+      <h1 class="hero-title" id="hero-title"></h1>
+      <p class="hero-sub" id="hero-sub"></p>
+    </section>
+
+    <div class="layout" id="day-view">
+      <aside class="sidebar">
+        <div class="side-block">
+          <div class="side-label">Selected day</div>
+          <div class="big-date">
+            <span class="big-day" id="big-day"></span>
+            <div>
+              <div class="big-weekday" id="big-weekday"></div>
+              <div class="big-month" id="big-month"></div>
+            </div>
+          </div>
+          <div class="date-nav">
+            <button class="ghost-btn" id="prev-day">← Previous</button>
+            <button class="ghost-btn" id="next-day">Next →</button>
+          </div>
+          <button class="link-btn" id="today-btn">Back to today</button>
+        </div>
+
+        <div class="side-block">
+          <div class="side-label">
+            <span>Progress</span>
+            <span class="saved" id="saved">Saved</span>
+          </div>
+          <div class="big-progress">
+            <span id="progress-count">0</span><span class="of" id="progress-size">/5</span>
+          </div>
+          <div class="progress-label" id="progress-label"></div>
+          <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+        </div>
+
+        <div class="side-block">
+          <div class="side-label">This week</div>
+          <ul class="week" id="week"></ul>
+        </div>
+
+        <div class="side-block stats">
+          <div class="stat">
+            <span class="stat-num" id="streak-number">0</span>
+            <span class="stat-label">Day streak</span>
+          </div>
+          <div class="stat">
+            <span class="stat-num" id="days-number">0</span>
+            <span class="stat-label">Active days</span>
+          </div>
+        </div>
+      </aside>
+
+      <section class="content">
+        <div class="list" id="words-list">
+          <div class="list-head words-grid">
+            <span>No.</span>
+            <span>English word</span>
+            <span>Meaning</span>
+            <span></span>
+          </div>
+          <ol class="rows" id="words"></ol>
+          <button class="dict-open" id="dict-open" type="button">
+            <span class="dict-open-label">Dictionary</span>
+            <span class="dict-open-count" id="dict-open-count"></span>
+            <span class="dict-open-arrow" aria-hidden="true">→</span>
+          </button>
+        </div>
+
+        <div class="list" id="sentences-list" hidden>
+          <div class="list-head sentences-grid">
+            <span>No.</span>
+            <span>Italian sentence</span>
+            <span>English translation</span>
+            <span></span>
+          </div>
+          <ol class="rows" id="sentences"></ol>
+        </div>
+      </section>
+    </div>
+
+    <div class="review-view" id="review-view" hidden>
+      <section class="dash" id="progress-dash" hidden>
+        <p class="dash-status" id="dash-status" hidden></p>
+        <div class="dash-stats" id="dash-stats"></div>
+
+        <div class="dash-card">
+          <div class="side-label">Accuracy — last 14 days</div>
+          <div class="dash-chart" id="dash-chart"></div>
+        </div>
+
+        <div class="dash-columns">
+          <div class="dash-card">
+            <div class="side-label">Recent reviews</div>
+            <ul class="dash-list" id="dash-sessions"></ul>
+          </div>
+          <div class="dash-card">
+            <div class="side-label">Hardest words</div>
+            <ul class="dash-list" id="dash-hard"></ul>
+          </div>
+        </div>
+      </section>
+
+      <div class="stage" id="review-stage">
+        <section class="stage-panel" id="review-start">
+          <div class="stage-label">Today's deck</div>
+          <h2 class="stage-title">Ready when <em>you are.</em></h2>
+          <p class="stage-text" id="review-intro"></p>
+          <button class="pill-btn light" id="review-start-btn">Start review</button>
+        </section>
+
+        <section class="session" id="review-session" hidden>
+          <div class="session-top">
+            <span id="review-count"></span>
+            <span class="review-score" id="review-score"></span>
+          </div>
+          <div class="session-track"><div class="session-fill" id="review-fill"></div></div>
+
+          <div class="flashcard" id="flashcard" tabindex="0" role="button" aria-label="Flip card">
+            <div class="flashcard-inner">
+              <div class="flashcard-face front">
+                <span class="face-label">Italian</span>
+                <div class="flash-word" id="flash-front"></div>
+                <span class="flip-hint">How do you say it in English? Tap the card to flip it</span>
+              </div>
+              <div class="flashcard-face back">
+                <span class="face-label">English</span>
+                <div class="flash-word" id="flash-back"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="answer-btns" id="answer-btns">
+            <button class="pill-btn outline" id="missed-btn">← I didn't know</button>
+            <button class="pill-btn light" id="known-btn">I knew it →</button>
+          </div>
+        </section>
+
+        <section class="stage-panel" id="review-done" hidden>
+          <div class="stage-label">Session complete</div>
+          <h2 class="stage-title">Well <em>done.</em></h2>
+          <p class="stage-text" id="review-summary"></p>
+          <div class="done-btns">
+            <button class="pill-btn outline" id="review-again-btn">Review again</button>
+            <button class="pill-btn light" id="back-to-diary-btn">Back to diary</button>
+          </div>
+        </section>
+      </div>
+
+      <section class="dash-card tricky" id="review-tricky" hidden>
+        <div class="side-label">Words you miss most often</div>
+        <ul class="dash-list" id="tricky-list"></ul>
+      </section>
+    </div>
+
+    <section class="rules-view" id="rules-view" hidden>
+      <div class="rules-intro">
+        <div>
+          <div class="stage-label">A little grammar, made clear</div>
+          <h2 class="rules-title">Rules to <em>remember.</em></h2>
+          <p class="rules-copy" id="rules-copy">One clear idea at a time, with a visual guide to help it stick.</p>
+        </div>
+      </div>
+      <p class="rules-status" id="rules-status" role="status" aria-live="polite"></p>
+      <div class="rules-list" id="rules-list"></div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <span>English Diary</span>
+    <span>Five words a day — a little English every day.</span>
+  </footer>
+
+  <div class="dict" id="dict" hidden>
+    <div class="dict-panel" role="dialog" aria-modal="true" aria-labelledby="dict-title">
+      <div class="dict-head">
+        <div>
+          <div class="side-label">Dictionary</div>
+          <h2 class="dict-title" id="dict-title"></h2>
+        </div>
+        <button class="dict-close" id="dict-close" type="button" aria-label="Close dictionary">×</button>
+      </div>
+      <input class="dict-search" id="dict-search" type="search" placeholder="Search in English or Italian…" autocomplete="off" spellcheck="false" translate="no" />
+      <p class="dict-count" id="dict-count"></p>
+      <div class="dict-list" id="dict-list"></div>
+    </div>
+  </div>
+
+  <div class="login" id="login" hidden>
+    <form class="login-card" id="login-form">
+      <span class="brand-dot"></span>
+      <div class="stage-label login-label">English Diary</div>
+      <h2 class="login-title">Welcome <em>back.</em></h2>
+      <p class="login-text">Sign in to see today's words and sentences.</p>
+      <label class="login-field">
+        <span>Email</span>
+        <input id="login-email" type="email" autocomplete="username" required />
+      </label>
+      <label class="login-field">
+        <span>Password</span>
+        <input id="login-password" type="password" autocomplete="current-password" required />
+      </label>
+      <p class="login-error" id="login-error" role="alert"></p>
+      <button class="pill-btn dark" id="login-submit" type="submit">Sign in</button>
+    </form>
+  </div>
+
+  <template id="word-template">
+    <li class="row words-grid">
+      <span class="row-num"></span>
+      <input class="en" type="text" placeholder="Type a word" autocomplete="off" spellcheck="false" translate="no" lang="en" />
+      <input class="it" type="text" placeholder="its meaning" autocomplete="off" spellcheck="false" translate="no" lang="it" />
+      <span class="row-status" aria-hidden="true"></span>
+    </li>
+  </template>
+
+  <template id="sentence-template">
+    <li class="row sentences-grid">
+      <span class="row-num"></span>
+      <textarea class="it" rows="1" placeholder="Write a sentence in Italian…" autocomplete="off" spellcheck="false" translate="no" lang="it"></textarea>
+      <div class="en-cell">
+        <textarea class="en" rows="1" placeholder="Translate it into English…" autocomplete="off" spellcheck="false" translate="no" lang="en"></textarea>
+        <div class="fix-box" hidden>
+          <span class="fix-label">Correction</span>
+          <textarea class="fix" rows="1" placeholder="Write the correct translation…" autocomplete="off" spellcheck="false" translate="no" lang="en"></textarea>
+        </div>
+      </div>
+      <span class="row-status" aria-hidden="true"></span>
+    </li>
+  </template>
+
+  <script src="config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="app.js"></script>
+  <script src="review.js"></script>
+  <script src="dictionary.js"></script>
+  <script src="sync.js"></script>
+</body>
+</html>
